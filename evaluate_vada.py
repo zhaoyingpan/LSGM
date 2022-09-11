@@ -198,11 +198,11 @@ def main(eval_args):
 
     elif eval_args.eval_mode == 'sample':
         num_total_samples = eval_args.num_fid_samples
-        num_gpus = args.num_process_per_node * args.num_proc_node
+        num_gpus = eval_args.num_process_per_node * eval_args.num_proc_node
         num_sample_per_gpu = int(np.ceil(num_total_samples / num_gpus))
-        num_samples = 100
-        n = 10
-        m = 10
+        num_samples = 25
+        n = 5
+        m = 5
         # n = int(np.floor(np.sqrt(num_samples)))
         num_iter = int(np.ceil(num_sample_per_gpu / num_samples))
         all_nfe = []
@@ -317,9 +317,13 @@ if __name__ == '__main__':
     parser.add_argument('--num_process_per_node', type=int, default=1,
                         help='number of gpus')
 
+    parser.add_argument('--device_id', type=str, default="1")
+    
     args = parser.parse_args()
     args.save = args.root + '/' + args.save
     utils.create_exp_dir(args.save)
+
+    os.environ["CUDA_VISIBLE_DEVICES"] = args.device_id
 
     size = args.num_process_per_node
 
